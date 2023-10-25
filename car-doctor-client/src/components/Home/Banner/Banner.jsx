@@ -7,10 +7,10 @@ const Banner = () => {
   return (
     <div className="h-96">
       <Carousel>
-        <img alt="..." src={img01} />
-        <img alt="..." src={img02} />
-        <img alt="..." src={img03} />
-        <img alt="..." src={img04} />
+        <img className=" h-full w-full object-cover" alt="..." src={img01} />
+        <img className=" h-full w-full object-cover" alt="..." src={img02} />
+        <img className=" h-full w-full object-cover" alt="..." src={img03} />
+        <img className=" h-full w-full object-cover" alt="..." src={img04} />
       </Carousel>
     </div>
   );
