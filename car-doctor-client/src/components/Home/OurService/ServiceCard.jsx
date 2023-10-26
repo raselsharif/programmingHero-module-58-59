@@ -2,7 +2,7 @@ import { Card } from "flowbite-react";
 import { Link } from "react-router-dom";
 
 const ServiceCard = ({ service }) => {
-  console.log(service);
+  // console.log(service);
   const { img, title, price, _id } = service;
   return (
     <Card imgSrc={img}>
