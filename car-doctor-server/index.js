@@ -40,6 +40,22 @@ app.get('/services/:id',async(req, res)=>{
     const result = await serviceCollection.findOne(find)
     res.send(result)
 })
+// checkout post data
+const checkoutCollection = database.collection('checkout');
+
+app.get('/checkouts/:email',async(req, res)=>{
+  const email = req.params.email;
+  const filter = {email:email}
+  const result = await checkoutCollection.find(filter).toArray();
+  res.send(result)
+})
+
+app.post('/checkout',async(req,res)=>{
+const checkout = req.body;
+console.log(checkout);
+const result = await checkoutCollection.insertOne(checkout)
+res.send(result)
+})
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {

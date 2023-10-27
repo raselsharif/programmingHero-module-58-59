@@ -2,26 +2,44 @@ import { Button, Label, TextInput, Textarea } from "flowbite-react";
 import { useLoaderData } from "react-router-dom";
 
 const Checkout = () => {
+  const todayDate = new Date().toISOString().substr(0, 10);
+  console.log(todayDate);
   const checkoutLoaded = useLoaderData();
-  const { _id, title } = checkoutLoaded;
+  const { _id, title, price, img } = checkoutLoaded;
   const handleCheckout = (e) => {
     e.preventDefault();
     const form = e.target;
     const name = form.name.value;
-    const lName = form.lastName.value;
+    const date = form.date.value;
     const phone = form.phone.value;
     const email = form.email.value;
     const comments = form.comments.value;
 
     const checkOutInfo = {
       name,
-      lName,
+      date,
       phone,
       email,
       comments,
       serviceId: _id,
+      title,
+      price,
+      img,
     };
     console.log(checkOutInfo);
+    fetch("http://localhost:5000/checkout", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(checkOutInfo),
+    })
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -37,7 +55,7 @@ const Checkout = () => {
           <div>
             <div>
               <div className="mb-2 block">
-                <Label value="First Name" />
+                <Label value="Full Name" />
               </div>
               <TextInput
                 placeholder="First Name"
@@ -61,13 +79,14 @@ const Checkout = () => {
           <div>
             <div>
               <div className="mb-2 block">
-                <Label value="Last Name" />
+                <Label value="Date" />
               </div>
               <TextInput
                 placeholder="Last Name"
                 required
-                type="text"
-                name="lastName"
+                type="date"
+                name="date"
+                defaultValue={todayDate}
               />
             </div>
             <div>

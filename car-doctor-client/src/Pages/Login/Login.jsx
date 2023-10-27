@@ -7,10 +7,17 @@ const Login = () => {
   const signInHandler = (e) => {
     e.preventDefault();
     const form = e.target;
-    const name = form.name.value;
     const email = form.email.value;
+    const password = form.password.value;
 
-    console.log(name, email);
+    console.log(email, password);
+    signInEmailPass(email, password)
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
   return (
     <form
@@ -26,7 +33,7 @@ const Login = () => {
           placeholder="Your Email"
           required
           type="email"
-          name="name"
+          name="email"
         />
       </div>
       <div>
@@ -37,7 +44,7 @@ const Login = () => {
           required
           type="password"
           placeholder="Your Password"
-          name="email"
+          name="password"
         />
       </div>
 
