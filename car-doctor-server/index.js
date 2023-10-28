@@ -52,9 +52,28 @@ app.get('/checkouts/:email',async(req, res)=>{
 
 app.post('/checkout',async(req,res)=>{
 const checkout = req.body;
-console.log(checkout);
+// console.log(checkout);
 const result = await checkoutCollection.insertOne(checkout)
 res.send(result)
+})
+app.delete('/checkout/:id', async(req, res)=>{
+const id = req.params.id;
+const filter = {_id: new ObjectId(id)}
+const result = await checkoutCollection.deleteOne(filter);
+res.send(result)
+})
+
+app.patch('/checkout/:id', async(req, res)=>{
+  const id = req.params.id;
+  // console.log(id);
+  const filter = {_id: new ObjectId(id)};
+  const update = {
+    $set: {
+      status: "confirm"
+    }
+  }
+  const result = await checkoutCollection.updateOne(filter, update)
+  res.send(result)
 })
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");

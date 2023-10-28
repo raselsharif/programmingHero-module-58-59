@@ -9,9 +9,44 @@ const CartDetails = () => {
       .then((res) => res.json())
       .then((data) => setCarts(data));
   }, []);
+  const handleDelete = (id) => {
+    console.log(id);
+    fetch(`http://localhost:5000/checkout/${id}`, {
+      method: "DELETE",
+    })
+      .then((result) => {
+        console.log(result);
+        const remaining = carts.filter((cart) => id !== cart._id);
+        setCarts(remaining);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const handleUpdate = (id) => {
+    // console.log(id);
+    fetch(`http://localhost:5000/checkout/${id}`, {
+      method: "PATCH",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ status: "confirm" }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.modifiedCount > 0) {
+          const remaining = carts.filter((cart) => cart._id !== id);
+          const updated = carts.find((cart) => cart._id === id);
+          console.log(updated);
+          updated.status = "confirm";
+          const newCarts = [updated, ...remaining];
+          setCarts(newCarts);
+        }
+      });
+  };
   return (
     <div>
-      <h2>Cart Details</h2>
       <Table>
         <Table.Head>
           <Table.HeadCell>Service Image</Table.HeadCell>
@@ -34,17 +69,23 @@ const CartDetails = () => {
               <Table.Cell>$ {cart.price}</Table.Cell>
               <Table.Cell>{cart.date}</Table.Cell>
               <Table.Cell>
-                <button
-                  className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
-                  href="/tables"
-                >
-                  <p>Pending</p>
-                </button>
+                {cart?.status === "confirm" ? (
+                  <span className="text-green-700 font-semibold">
+                    Confirmed
+                  </span>
+                ) : (
+                  <button
+                    onClick={() => handleUpdate(cart._id)}
+                    className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
+                  >
+                    <p>Pending</p>
+                  </button>
+                )}
               </Table.Cell>
               <Table.Cell>
                 <button
+                  onClick={() => handleDelete(cart._id)}
                   className="font-medium text-red-600 hover:underline dark:text-red-500"
-                  href="/tables"
                 >
                   <p>Delete</p>
                 </button>
