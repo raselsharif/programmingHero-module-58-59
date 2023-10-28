@@ -6,6 +6,7 @@ import Checkout from "../Pages/Checkout/Checkout";
 import Login from "../Pages/Login/Login";
 import Register from "../Pages/Register/Register";
 import CartDetails from "../Pages/CartDetails/CartDetails";
+import PrivateRoutes from "./PrivateRoutes";
 
 const router = createBrowserRouter([
   {
@@ -18,13 +19,21 @@ const router = createBrowserRouter([
       },
       {
         path: "/servicedetails/:id",
-        element: <ServiceDetails></ServiceDetails>,
+        element: (
+          <PrivateRoutes>
+            <ServiceDetails></ServiceDetails>
+          </PrivateRoutes>
+        ),
         loader: ({ params }) =>
           fetch(`http://localhost:5000/services/${params.id}`),
       },
       {
         path: "/checkout/:id",
-        element: <Checkout></Checkout>,
+        element: (
+          <PrivateRoutes>
+            <Checkout></Checkout>
+          </PrivateRoutes>
+        ),
         loader: ({ params }) =>
           fetch(`http://localhost:5000/services/${params.id}`),
       },
@@ -38,7 +47,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/carts",
-        element: <CartDetails></CartDetails>,
+        element: (
+          <PrivateRoutes>
+            <CartDetails></CartDetails>
+          </PrivateRoutes>
+        ),
       },
     ],
   },
