@@ -1,3 +1,4 @@
+import axios from "axios";
 import { Table } from "flowbite-react";
 import { useEffect, useState } from "react";
 
@@ -5,9 +6,11 @@ const CartDetails = () => {
   const [carts, setCarts] = useState([]);
   console.log(carts);
   useEffect(() => {
-    fetch(`http://localhost:5000/checkouts/rasel.it@riclbd.com`)
-      .then((res) => res.json())
-      .then((data) => setCarts(data));
+    axios
+      .get(`http://localhost:5000/checkouts/rasel.it@riclbd.com`, {
+        withCredentials: true,
+      })
+      .then((res) => setCarts(res.data));
   }, []);
   const handleDelete = (id) => {
     console.log(id);

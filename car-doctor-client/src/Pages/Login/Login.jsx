@@ -21,10 +21,14 @@ const Login = () => {
         const user = { email };
         console.log(user);
 
-        axios.post("http://localhost:5000/jwt", user).then((res) => {
-          console.log(res.data);
-        });
-        // goTo(location?.state ? location?.state : "/");
+        axios
+          .post("http://localhost:5000/jwt", user, { withCredentials: true })
+          .then((res) => {
+            console.log(res.data);
+            if (res.data.Status) {
+              goTo(location?.state ? location?.state : "/");
+            }
+          });
       })
       .catch((err) => {
         console.log(err);
