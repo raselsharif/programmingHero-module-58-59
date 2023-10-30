@@ -1,17 +1,20 @@
 import axios from "axios";
 import { Table } from "flowbite-react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../../AuthPorvider/AuthProvider";
 
 const CartDetails = () => {
   const [carts, setCarts] = useState([]);
   console.log(carts);
+  const { user } = useContext(AuthContext);
+  console.log(user);
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/checkouts/rasel.it@riclbd.com`, {
+      .get(`http://localhost:5000/checkouts/${user.email}`, {
         withCredentials: true,
       })
       .then((res) => setCarts(res.data));
-  }, []);
+  }, [user.email]);
   const handleDelete = (id) => {
     console.log(id);
     fetch(`http://localhost:5000/checkout/${id}`, {

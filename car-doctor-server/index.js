@@ -15,6 +15,22 @@ app.use(cors({
 app.use(express.json())
 app.use(cookieParser())
 
+// custom middleware
+const verify = async (req, res, next)=>{
+  const token = req.cookies?.token;
+  // console.log("token from middleware",token);
+  if(!token){
+    return res.status(401).send({status: "unauthorized"})
+  }
+  jwt.verify(token, process.env.SECRET_KEY, (err, decode)=>{
+    if(err){
+      return res.status(401).send({status: "unauthorized"})
+    }
+    req.user = decode
+    next();
+  })
+} 
+
 const uri = `mongodb+srv://${process.env.DB_user}:${process.env.DB_pass}@cluster0.iuscecj.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -49,9 +65,12 @@ app.get('/services/:id',async(req, res)=>{
 // checkout post data
 const checkoutCollection = database.collection('checkout');
 
-app.get('/checkouts/:email',async(req, res)=>{
+app.get('/checkouts/:email',verify, async(req, res)=>{
   const email = req.params.email;
-  console.log("token from checkout",req.cookies.token);
+  // console.log("token from checkout",req.cookies.token);
+if(email !== req.user.email){
+  return res.status(402).send({status: "Forbidden"})
+}
   const filter = {email:email}
   const result = await checkoutCollection.find(filter).toArray();
   res.send(result)

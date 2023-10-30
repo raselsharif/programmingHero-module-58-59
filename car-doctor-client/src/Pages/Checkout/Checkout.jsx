@@ -1,10 +1,15 @@
 import { Button, Label, TextInput, Textarea } from "flowbite-react";
+import { useContext, useState } from "react";
 import { useLoaderData } from "react-router-dom";
+import { AuthContext } from "../../AuthPorvider/AuthProvider";
 
 const Checkout = () => {
   const todayDate = new Date().toISOString().substr(0, 10);
-  console.log(todayDate);
+  const [error, setError] = useState("");
+  // console.log(todayDate);
   const checkoutLoaded = useLoaderData();
+  // console.log(checkoutLoaded);
+  const { user } = useContext(AuthContext);
   const { _id, title, price, img } = checkoutLoaded;
   const handleCheckout = (e) => {
     e.preventDefault();
@@ -26,7 +31,10 @@ const Checkout = () => {
       price,
       img,
     };
-    console.log(checkOutInfo);
+    // console.log(checkOutInfo);
+    if (email !== user.email) {
+      return setError("email not match!");
+    }
     fetch("http://localhost:5000/checkout", {
       method: "POST",
       headers: {
@@ -98,7 +106,10 @@ const Checkout = () => {
                 required
                 type="email"
                 name="email"
+                defaultValue={user.email}
+                disabled
               />
+              <p>{error}</p>
             </div>
           </div>
         </div>
